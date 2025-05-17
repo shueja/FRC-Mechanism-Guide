@@ -1,11 +1,11 @@
 # Project information
-site_name: Choreo Documentation
-site_url: https://choreo.autos/
-site_description: A graphical tool for planning time-optimized trajectories for autonomous mobile robots in the FIRST Robotics Competition.
+site_name: FRC Software Mechanism Guide
+site_url: https://shueja.github.io/FRC-Mechanism-Guide
+site_description: Collected techniques for various mechanisms
 
 # Repository
-repo_name: SleipnirGroup/Choreo
-repo_url: https://github.com/SleipnirGroup/Choreo/
+repo_name: shueja/FRC-Mechanism-Guide
+repo_url: https://github.com/shueja/FRC-Mechanism-Guide
 
 # Configuration
 theme:
