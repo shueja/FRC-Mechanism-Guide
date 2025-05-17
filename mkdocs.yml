@@ -1,0 +1,114 @@
+# Project information
+site_name: Choreo Documentation
+site_url: https://choreo.autos/
+site_description: A graphical tool for planning time-optimized trajectories for autonomous mobile robots in the FIRST Robotics Competition.
+
+# Repository
+repo_name: SleipnirGroup/Choreo
+repo_url: https://github.com/SleipnirGroup/Choreo/
+
+# Configuration
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/link
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch-off
+        name: Switch to system preference
+  font:
+    text: Roboto
+    code: Roboto Mono
+  logo: media/icon1024x1024.png
+  favicon: media/icon1024x1024.png
+  features:
+    - content.code.copy
+    - content.code.select
+    - content.code.annotate
+    - content.code.select.title
+    - toc.follow
+    - toc.integrate
+    - content.tabs.link
+    - search.share
+    - search.highlight
+    - search.suggest
+    - announce.dismiss
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.top
+    - navigation.instant
+
+# Extensions
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - md_in_html
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator:
+        !!python/name:material.extensions.emoji.to_svg # Page tree
+
+
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+
+extra_javascript:
+  - js/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+nav:
+  - Home:
+      - Home: index.md
+      - Installation: installation.md
+      - Document Settings Panel: document-settings.md
+      - Robot Configuration: document-settings/robot-configuration.md
+  - Usage:
+      - Editing Paths: usage/editing-paths.md
+      - Controls & Shortcuts: usage/controls-shortcuts.md
+      - Saving: usage/saving.md
+      - View Options Panel: usage/view-options-panel.md
+      - Estimating Moment of Inertia: usage/estimating-moi.md
+  - ChoreoLib:
+      - Getting Started: choreolib/getting-started.md
+      - Auto Factory: choreolib/auto-factory.md
+      - Trajectory API: choreolib/trajectory-api.md
+      - Java API: api/choreolib/java/index.html
+      - C++ API: api/choreolib/cpp/index.html
+  - TrajoptLib (Internal API):
+      - C++ API: api/trajoptlib/cpp/index.html
+  - Contributing:
+      - Building Choreo: contributing/building-choreo.md
+      - Building ChoreoLib: contributing/building-choreolib.md
+      - Building Documentation: contributing/building-docs.md
+      - Contributing Guide: contributing/contributing-guide.md
+      - Release Process: contributing/release-process.md
+      - Upgrading File Schemas: contributing/schema-upgrade.md
+      - Sample Flipping Logic: contributing/sample-flipping.md
