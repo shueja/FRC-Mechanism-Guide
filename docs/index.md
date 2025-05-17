@@ -1,50 +1,44 @@
 # Welcome
 
-Welcome to the [Choreo](https://github.com/SleipnirGroup/Choreo) documentation.
 
-[Get started](./installation.md){ .md-button .md-button--primary }
-
-
-## What is Choreo?
-
-Choreo (Constraint-Honoring Omnidirectional Route Editor and Optimizer, pronounced /koʊˈɹiːoʊ/, like K + "Oreo") is a graphical tool for planning time-optimized trajectories for autonomous mobile robots in the FIRST Robotics Competition.
+## Guides for Mechanism Types
 
 <div class="grid cards" markdown>
 
--   :material-clock-fast:{ .lg .middle } __Accuracy__
+-   :material-clock-fast:{ .lg .middle } __Rollers__
 
     ---
 
-    Each trajectory takes full advantage of the drivetrain's performance, while obeying its dynamics constraints.
+    Any mechanism that spins at a non-precise speed, with no hard limits to its range of motion.
 
 
--   :octicons-sparkle-fill-16:{ .lg .middle } __Easy UI__
+-   :octicons-sparkle-fill-16:{ .lg .middle } __Manual or End-to-End Position Mechanisms__
+
+    ---
+    Position control by manual (joystick/button) input or driving to a hard stop.
+    
+
+
+-   :material-microsoft-windows:{ .lg .middle } :material-apple:{ .lg .middle } :fontawesome-brands-linux:{ .lg .middle } [__Elevators__](./mechanisms/elevators.md)
 
     ---
 
-    Easy to use graphical interface allowing real time playback.
-
-
--   :material-microsoft-windows:{ .lg .middle } :material-apple:{ .lg .middle } :fontawesome-brands-linux:{ .lg .middle } [__Cross Platform__](./installation.md)
-
-    ---
-
-    Choreo runs on Windows x86_64/aarch64, macOS x86_64/arm64, and Linux x86_64.
+    Feedback-controlled linear position, with or without gravity compensation.
 
 
 
--   :material-tune:{ .lg .middle } [__Customization__](./usage/editing-paths.md)
+-   :material-tune:{ .lg .middle } [__Pivots__](./mechanisms/pivots.md)
 
     ---
 
-    Different types of **waypoints**, **constraints**, and **obstacles** along the path.
+    Arms, Wrists, Turrets, Swerve Steering, with or without gravity compensation.
 
 
--   :material-library-shelves:{ .lg .middle } [__ChoreoLib__](./choreolib/getting-started.md)
+-   :material-library-shelves:{ .lg .middle } [__Flywheels__](./mechanisms/flywheels.md)
 
     ---
 
-    Robot-side vendor library.
+    Usually in shooting games, using feedback to get consistent wheel speed. Also Swerve Drive motors.
 
 
 
@@ -63,27 +57,3 @@ Choreo (Constraint-Honoring Omnidirectional Route Editor and Optimizer, pronounc
 
 
 </div>
-
-![Readme Screenshot of Example Choreo Setup](media/readmeScreenshot.png)
-
-## Safety
-
-FRC robots are inherently dangerous, especially when operated at high speeds. Choreo is designed to enable users to operate their FRC robot at the very limits of its physical capabilities.
-
-When using Choreo, operators should consider the following best practices to maximize their safety and the safety of their teammates. See the [FIRST Safety Manual](https://www.firstinspires.org/robotics/frc/safety) for additional guidance.
-
-- Test in an area free of safety hazards and surrounded by physical barriers. Control the entry of people into the barricaded test area.
-- Use a well-functioning Driver Station and be ready to disable the robot at all times when testing.
-- Ensure your robot has a Robot Signal Light installed, functional, and visible from all directions. Teach all teammates how to determine the robot's enabled state based on the RSL.
-- In a voice loud enough to hear, announce to bystanders your intent to enable the robot. Never enable the robot when people are in the test area, even if you think they are clear of the robot's expected path.
-- Continue to control access to the testing area. When additional people arrive to the workspace, tell them about the hazards present.
-
-!!! tip
-
-    Be humble. Start small by planning a simple but meaningful trajectory, and convince yourself that the robot behaves as expected before attempting a more complex path.
-
-As stated in our BSD 3-clause [License](https://github.com/SleipnirGroup/Choreo/blob/main/LICENSE), Choreo is provided "as-is" with no warranty intended or implied. By using this software, you:
-
-- Acknowledge an understanding of the risks involved with controlling experimental, high-powered autonomous robots with experimental, high-powered software.
-- Accept the responsibility for ensuring your safety and the safety of others around you.
-- Agree to hold us harmless and not liable for any damage or loss.
