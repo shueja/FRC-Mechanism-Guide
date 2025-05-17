@@ -5,21 +5,21 @@
 
 <div class="grid cards" markdown>
 
--   :material-clock-fast:{ .lg .middle } __Rollers__
+-   [__Rollers__](./mechanisms/rollers.md)
 
     ---
 
     Any mechanism that spins at a non-precise speed, with no hard limits to its range of motion.
 
 
--   :octicons-sparkle-fill-16:{ .lg .middle } __Manual or End-to-End Position Mechanisms__
+-   [__Manual or End-to-End Position Mechanisms__](./mechanisms/manual.md)
 
     ---
     Position control by manual (joystick/button) input or driving to a hard stop.
     
 
 
--   :material-microsoft-windows:{ .lg .middle } :material-apple:{ .lg .middle } :fontawesome-brands-linux:{ .lg .middle } [__Elevators__](./mechanisms/elevators.md)
+-   [__Elevators__](./mechanisms/elevators.md)
 
     ---
 
@@ -27,14 +27,14 @@
 
 
 
--   :material-tune:{ .lg .middle } [__Pivots__](./mechanisms/pivots.md)
+-   [__Pivots__](./mechanisms/pivots.md)
 
     ---
 
     Arms, Wrists, Turrets, Swerve Steering, with or without gravity compensation.
 
 
--   :material-library-shelves:{ .lg .middle } [__Flywheels__](./mechanisms/flywheels.md)
+-   [__Flywheels__](./mechanisms/flywheels.md)
 
     ---
 
@@ -42,18 +42,16 @@
 
 
 
--   :material-scale-balance:{ .lg .middle } [__Open Source__](./contributing/contributing-guide.md)
+-   [__Swerve__](./mechanisms/swerve.md)
 
     ---
 
-    Choreo is licensed under BSD-3-Clause, just like WPILib.
+    Suggestions for building on the CTRE swerve library.
 
-<!-- -   :material-connection:{ .lg .middle } __PathPlanner Integration__
+-   [__LED Strips__](./mechanisms/leds.md)
 
     ---
 
-    Integration with PathPlanner allows you to generate paths while still working with a familiar toolset. -->
-
-
+    Light strips that signal the state of the robot.
 
 </div>
