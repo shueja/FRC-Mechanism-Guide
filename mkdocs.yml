@@ -32,8 +32,8 @@ theme:
   font:
     text: Roboto
     code: Roboto Mono
-  logo: media/icon1024x1024.png
-  favicon: media/icon1024x1024.png
+  logo: none.png
+  favicon: none.png
   features:
     - content.code.copy
     - content.code.select
