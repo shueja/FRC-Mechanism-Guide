@@ -87,3 +87,6 @@ extra_javascript:
 nav:
   - Home:
       - Home: index.md
+  - Mechanisms:
+      - Rollers: mechanisms/rollers.md
+      - Manual Control: mechanisms/manual.md
