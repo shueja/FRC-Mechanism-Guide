@@ -90,5 +90,6 @@ nav:
   - Home:
       - Home: index.md
   - Mechanisms:
+      - Introduction: mechanisms/structure.md
       - Rollers: mechanisms/rollers.md
       - Manual Control: mechanisms/manual.md

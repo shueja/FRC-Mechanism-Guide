@@ -8,7 +8,8 @@ The author is a former mentor and former student on team 6995 NOMAD. The advice 
 
 * Java command-based architecture
 * Use of command factory methods in subsystems and for compositions (TODO a page explaining these patterns)
-* Phoenix 6 (TalonFX) is used for all mechanisms
+* Every mechanism is driven by a TalonFX  or TalonFXS with Phoenix 6
+* Pneumatics are not included 
 
 The content on this site is the opinion of the author and is not official training material of 6995 NOMAD, nor does it necessarily represent 6995's continued practices.
 
@@ -17,6 +18,8 @@ The content on this site is the opinion of the author and is not official traini
 This is not a substitute for basic Java tutorials, WPILib documentation, or motor vendor documentation. This content assumes a basic familiarity with Java, the command-based architecture, and the various control strategies, configuration options, and feedback provided in the Phoenix 6 TalonFX library.
 
 ## Guides for Mechanism Types
+
+[__How Each Guide is Structured__](./mechanisms/structure.md)
 
 <div class="grid cards" markdown>
 
