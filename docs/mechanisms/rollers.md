@@ -12,21 +12,28 @@ It is important to be consistent regarding which direction is positive. However,
 ## Commands
 ```java
 /**
- * This is private because it shouldn't be accessed outside the subsystem when not within a Command
+ * This is private because it shouldn't be accessed outside the subsystem
+ * when not within a Command.
  */
 private void setVoltage(double voltage) {
     motor.setControl(voltageRequest.withOutput(voltage));
 }
 
 /**
- * This is the core command. It runs indefinitely and sets the motor voltage every loop. Other commands can be written using this one.
+ * This is the core command. It runs indefinitely and sets the motor voltage every loop.
+ * Other commands can be written using this one.
+ * This is for if the voltage is not known until the command is run, or
+ * if the voltage changes during the command.
  */
 public Command voltage(DoubleSupplier voltage) {
     return run(()->setVoltage(voltage.getAsDouble())).withName("voltage");
 }
 
 /**
- * If the voltage is constant, the control request does not need to be updated every loop. But this command should still run until interrupted, mirroring how the motor will continue running the request.
+ * If the voltage is constant, the control request does not need to be updated
+ * every loop. But this command should still run until interrupted, mirroring
+ * how the motor will continue running the request. Otherwise, the default command
+ * could take over.
  */
 public Command voltage(double voltage) {
     return startRun(()->setVoltage(voltage), ()->{}).withName("voltage(" + voltage + ")");
@@ -42,7 +49,11 @@ public Command stop() {
 /**
  * This variant is useful in compositions. It stops the motor and ends immediately. 
  * 
- * If it is within a sequence group, the group can move immediately on. If it is within a parallel group, the group ends after the other commands in the group end. If it is run on its own, it ends immediately and the subsystem goes to default command, which is also stopped.
+ * If it is within a sequence group, the group can move immediately on.
+ * If it is within a parallel group, the group ends after the other commands
+ * in the group end.
+ * If it is run on its own, it ends immediately and the subsystem goes to
+ * default command, which is also a stop command.
  */
 public Command stopOnce() {
     return runOnce(()->setVoltage(0)).withName("stopOnce");
@@ -50,12 +61,14 @@ public Command stopOnce() {
 ```
 
 Other commands should describe tasks specific to the mechanism's role. For example:
+
 * Consider a "midtake", which receives and holds a game piece from an intake, but also feeds that game piece to a shooter. It might have:
     * `intake()`, a fast roller speed matching the incoming game piece,
     * `store()`, a slower speed which is used with sensors to put the game piece in a specific position in the midtake,
     * `feed()`, a different speed which pushes the game piece to the shooter
 * Task-specific naming is better than e.g. `fast()`, `slow()` because it allows others writing robot code to understand which action should be used.
 * Sometimes the task-specific outputs might be defined outside the roller subsystem.
+
 > __EXAMPLE__
 >
 > 6995's 2025 code had 6 different ways to score the same game piece (coral). Each scoring option had its own scoring voltage for the "hand" subsystem (not all in the same direction), which was encoded alongside other option-specific configuration. Thus, the scoring command looked something like `hand.voltage(()->scoringOption.scoreVolts)`. This is fine, because the command's role is still self-documenting.
