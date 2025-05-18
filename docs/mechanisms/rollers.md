@@ -22,21 +22,21 @@ private void setVoltage(double voltage) {
  * This is the core command. It runs indefinitely and sets the motor voltage every loop. Other commands can be written using this one.
  */
 public Command voltage(DoubleSupplier voltage) {
-    return run(()->setVoltage(voltage.getAsDouble()));
+    return run(()->setVoltage(voltage.getAsDouble())).withName("voltage");
 }
 
 /**
  * If the voltage is constant, the control request does not need to be updated every loop. But this command should still run until interrupted, mirroring how the motor will continue running the request.
  */
 public Command voltage(double voltage) {
-    return startRun(()->setVoltage(voltage), ()->{});
+    return startRun(()->setVoltage(voltage), ()->{}).withName("voltage(" + voltage + ")");
 }
 
 /**
  * This is the **default command**. It runs until interrupted.
  */
 public Command stop() {
-    return voltage(0);
+    return voltage(0).withName("stop");
 }
 
 /**
@@ -45,15 +45,16 @@ public Command stop() {
  * If it is within a sequence group, the group can move immediately on. If it is within a parallel group, the group ends after the other commands in the group end. If it is run on its own, it ends immediately and the subsystem goes to default command, which is also stopped.
  */
 public Command stopOnce() {
-    return runOnce(()->setVoltage(0));
+    return runOnce(()->setVoltage(0)).withName("stopOnce");
 }
 ```
+
 Other commands should describe tasks specific to the mechanism's role. For example:
-    * Consider a "midtake", which receives and holds a game piece from an intake, but also feeds that game piece to a shooter. It might have:
-        * `intake()`, a fast roller speed matching the incoming game piece,
-        * `store()`, a slower speed which is used with sensors to put the game piece in a specific position in the midtake,
-        * `feed()`, a different speed which pushes the game piece to the shooter
-    * Task-specific naming is better than e.g. `fast()`, `slow()` because it allows others writing robot code to understand which action should be used.
+* Consider a "midtake", which receives and holds a game piece from an intake, but also feeds that game piece to a shooter. It might have:
+    * `intake()`, a fast roller speed matching the incoming game piece,
+    * `store()`, a slower speed which is used with sensors to put the game piece in a specific position in the midtake,
+    * `feed()`, a different speed which pushes the game piece to the shooter
+* Task-specific naming is better than e.g. `fast()`, `slow()` because it allows others writing robot code to understand which action should be used.
 * Sometimes the task-specific outputs might be defined outside the roller subsystem.
 > __EXAMPLE__
 >
@@ -64,9 +65,9 @@ Use a `VoltageOut` request.
 
 ## Configuration
 ### Current Limits
-Current limits are the most important aspect of roller motor configuration. The __stator__ current limit roughly corresponds to maximum applied torque on the roller. 
+Current limits are the most important configuration. The __stator__ current limit roughly corresponds to maximum applied torque on the roller. 
 
-> Ensure the current limit is enabled: `.withStatorCurrentLimitEnable(true)`. If you are not simulating motor velocity, enable the limit only in real life, with `.withStatorCurrentLimitEnable(RobotBase.isReal())`.
+> Be sure to actually enable the current limit: `.withStatorCurrentLimitEnable(true)`. If you are not simulating motor velocity, enable the limit only in real life, with `.withStatorCurrentLimitEnable(RobotBase.isReal())`.
 
 * If the roller needs to stall against a piece continuously, such as to hold a compressible ball, the current limit might need to be high in order to get a solid grip.
 * A too-high limit can let the roller break friction and slip past the piece. This may or may not be wanted.
@@ -76,7 +77,15 @@ Current limits are the most important aspect of roller motor configuration. The 
 ### Inversion
 Configure the InvertedValue so that positive input obeys the convention described above.
 
+### NeutralMode
+Usually `Brake` for consistency of stopping position, but if the rollers need to free-spin, `Coast` can be used.
+
+> __EXAMPLE__
+>
+> In 6995's 2024 robot, the intake pivoted down and passed the game piece (a foam torus) through to a midtake roller. Sometimes the intake would automatically pivot up and stop before the piece was fully out of the intake, so the piece would be bent and get stuck. Perhaps `Coast` mode on the intake rollers would have permitted the midtake rollers to still pull the piece out of the intake.
+
 ## Constants
+
 It may make sense to store the voltage for each task as a constant, but if the constant is only used in a command factory like
 ```java
 public Command intake() {
@@ -92,6 +101,8 @@ public Command intake() {
 ```
 ## Logging
 Logging motor voltage (`motor.getMotorVoltage()`) and stator current (`motor.getStatorCurrent()`), as well as motor velocity (`motor.getVelocity()`) are useful for understanding what the roller was doing in replay, since rollers are otherwise hard to visualize. The exact value of velocity does not matter, but it helps capture what the roller was actually doing when given a particular voltage.
+
+
 
 ## Simulation
 Simulation is not necessary for pure voltage control, if the current limit is disabled in simulation. 
