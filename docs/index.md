@@ -7,7 +7,7 @@ These guides are highly opinionated and based on team 6995 NOMAD's 2025 season c
 The guides assume:
 
 * Java command-based architecture
-* Use of command factory methods in subsystems and for compositions (TODO a page explaining these patterns)
+* Use of command factory methods in subsystems and for compositions (see [general command advice](./mechanisms/general/commands.md))
 * Every mechanism is driven by a TalonFX with Phoenix 6
     * TalonFXS is largely the same, but the author does not have experience with TalonFXS and its need for an external encoder. 
 * Pneumatics are not included 
