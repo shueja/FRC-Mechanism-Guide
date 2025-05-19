@@ -7,7 +7,7 @@ These guides use the __Subsystem Command Factory__ architecture within the WPILi
 2. To best enforce this practice, a subsystem should make it impossible for code outside the subsystem to control the hardware outside of a command that requires the subsystem.
 3. Commands representing the most basic subsystem actions usually only need one or two of the command lifecycle stages (initialize, execute, isFinished, end)
 4. It is helpful to be able to tell what basic commands a subsystem can perform from within an autocomplete list.
-5. For technical reasons, a single instance of a command should not be used in more than one place. The architecture should make it easy to get a new instance of a given command each time the command is needed.
+5. As required by the command scheduler, a single instance of a command should not be used in more than one composition. The architecture should make it easy to get a new instance of a given command each time the command is needed.
 
 ## Subsystem Command Factory
 
