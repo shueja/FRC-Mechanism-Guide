@@ -93,6 +93,7 @@ nav:
       - Guide Structure: mechanisms/structure.md
       - General: 
         - Index: mechanisms/general.md
+        - Conventions: mechanisms/general/conventions.md
         - Commands: mechanisms/general/commands.md
       - Rollers: mechanisms/rollers.md
       - Manual Control: mechanisms/manual.md
