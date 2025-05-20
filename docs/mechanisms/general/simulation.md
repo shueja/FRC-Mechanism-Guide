@@ -53,12 +53,12 @@ The subsystem should have a sim object within it, which is constructed using phy
 ### The Sim Model Class
 
  These sim objects can also model hard range limits and account for gear ratios. WPILib provides several sim objects for common use cases. They differ in the units used for configuration and output:
+
 |Class|State|Units|Notes|
 |-----|-----|-----|---|
-|DCMotorSim|Position, Velocity|Motor Rotations|No range limits
-|ElevatorSim|Position, Velocity|Meters|Range limits, gravity compensation (assumes vertical elevator)
+|DCMotorSim|Position, Velocity|Motor Rotations|No range limits|
+|ElevatorSim|Position, Velocity|Meters|Range limits, gravity compensation (assumes vertical elevator)|
 
-Each mechanism guide will recommend a sim object to use, but
 
 ### Unit Conversions
 
