@@ -77,6 +77,7 @@ public class Conveyor extends SubsystemBase {
             // reverse slowly until no longer detecting
             voltage(-0.5).until(pieceDetected.negate()),
             //The piece is now behind the beam, not breaking it.
+            //Move forward slowly to position it precisely, barely breaking the beam.
             voltage(0.2).until(pieceDetected),
             stopOnce()
         ).withName("storePiece");
@@ -92,4 +93,84 @@ void bindTriggers() {
     conveyor.pieceDetected.whileTrue(/*driver feedback*/);
 }
 
+```
+
+## Alternative Command Architectures
+
+### Problems with Subsystem Command Factories
+
+The above architecture does have some downsides:
+
+* Sometimes a subsystem has so many command factories or factories with enough complexity that it becomes hard to navigate or find the internal implementation of the subsystem. 
+* When creating a command that only requires one subsystem but needs information from another (such as if `pieceDetected` was not within the `Conveyor` class), a subsystem command factory needs to have that information passed in as a parameter. This is known as dependency injection (DI). Alternatively, the command factory can be written somewhere where both subsystems can be injected or are already in scope.  
+* Factories creating multi-subsystem compositions have the same issues regarding DI, and really shouldn't be in any one subsystem. Writing full compositions as-needed (i.e. within a button binding) works but makes it hard to reuse work, such as between teleop bindings and auto routines.
+
+Below are a few other common ways to organize the definitions of commands.
+
+### Separate Factory Classes
+
+Writing non-subsystem classes containing multi-subsystem factories is a great way to organize the robot's higher-level subsystem integration. There are generally two ways to do this.
+
+1. Take an instance of each subsystem in the class constructor and access the class's member variables in the subsystems. This is less boilerplate and leads to compositions looking similar between the factory class and `Robot.java`.
+2. Take an instance of each needed subsystem in each factory's parameter list, so that the factories can be static. This is more typing when calling each factory, but makes it easier to spread factory methods out wherever they make sense to write. 
+
+### Class Commands
+
+WPILib does support writing full subclasses of `Command` to define command behavior. This is __not generally recommended__ because most subsystem behavior can be expressed more succinctly with compositions of factory methods. However, class commands have some benefits:
+
+* They can easily store state that might need to be captured on `initialize`, during some `execute`s, etc.
+* When the command has many parameters or different possible constructors, it can help to write them as class constructors rather than factory methods within the subsystem. 
+* If all four lifecycle methods have complicated bodies that aren't used in other commands or exposed in the subsystem, a class command can contain those long methods.
+
+When using class commands, ensure the following:
+
+1. You MUST call `addRequirements(Subsystem...)` in the constructor with any subsystems required by the command. The automatic requirement implicit in the `Subsystem#run()` etc. factories is __not__ available here.
+2. You are not creating and scheduling other, more simple subsystem commands. This will cause the class command to be interrupted.
+
+### Package-Private: Preserving Access Safety Outside Subsystems
+
+When defining commands outside the subsystem which directly call the hardware-controlling methods, the prior advice of making the hardware-controlling methods private does not work. However, Java has the concept of __package-private__ methods, which uses the package layout (defined by the directory layout) to restrict access.
+
+Consider the following directory layout:
+```
+robot
+| subsystems
+| | conveyor
+| | | Conveyor.java (frc.robot.subsystems.conveyor.Conveyor)
+| | |_ReceiveCommand.java (frc.robot.subsystems.conveyor.ReceiveCommand)
+| |_MultiSubsystemFactories.java (frc.robot.subsystems.MultiSubsystemFactories)
+|_Robot.java (frc.robot.Robot)
+```
+
+`Conveyor` has a package-private `setVoltage` method, declared by the lack of another access modifier:
+
+```java
+public class Conveyor extends SubsystemBase {
+    void setVoltage(...){...}
+}
+```
+
+If `ReceiveCommand` can access an instance of `Conveyor`, it can call the package-private `setVoltage`:
+```java
+public class ReceiveCommand extends CommandBase {
+    private Conveyor conveyor;
+    public ReceiveCommand(Conveyor conveyor) {
+        this.conveyor = conveyor;
+    }
+    @Override
+    public void initialize() {
+        conveyor.setVoltage(10);
+    }
+}
+```
+
+But `Robot` cannot call `setVoltage` because `frc.robot.Robot` is not in the same package as `frc.robot.subsystems.conveyor.Conveyor`:
+
+```java
+public class Robot extends TimedRobot {
+    private Conveyor conveyor = new Conveyor();
+    void teleopPeriodic() {
+        conveyor.setVoltage(10); // This ERRORS, as it should.
+    }
+}
 ```
