@@ -37,15 +37,12 @@ import static edu.wpi.first.wpilibj2.command.Commands.*;
 public class Conveyor extends SubsystemBase {
     public Conveyor() {...}
 
-    /** Returns if a piece is currently detected*/
-    public boolean pieceDetected() {...}
-
     /**
-     * Suppose the sensor needs some debouncing; this can be done by
-     * wrapping pieceDetected in a Trigger.
+     * Suppose the sensor needs some debouncing; this can be done easily when
+     * using a Trigger
      */
-    public final Trigger pieceDetectedTrg =
-        new Trigger(this::pieceDetected).debounce(0.1);
+    public final Trigger pieceDetected =
+        new Trigger(()->{/*beam broken*/}).debounce(0.1);
 
     /**
      * This method would be called each loop, so the parameter is not a Supplier.
@@ -74,23 +71,25 @@ public class Conveyor extends SubsystemBase {
     public Command storePiece() {
         return sequence( // imported from Commands.*
             // Run quickly forward until the piece is detected.
-            receive().until(pieceDetectedTrg)
+            receive().until(pieceDetected)
             // if piece is detected when storePiece starts, skip the receive
-                .unless(pieceDetectedTrg),
+                .unless(pieceDetected),
             // reverse slowly until no longer detecting
-            voltage(-0.5).until(pieceDetectedTrg.negate()),
+            voltage(-0.5).until(pieceDetected.negate()),
             //The piece is now behind the beam, not breaking it.
-            voltage(0.2).until(pieceDetectedTrg),
+            voltage(0.2).until(pieceDetected),
             stopOnce()
         ).withName("storePiece");
     }
 }
 
-// Usage elsewhere
-void bindButtons() {
+// Outside the subsystem
+void bindTriggers() {
     Trigger intakeButton = controller.a();
-    // Command factories can be called during code setup.
+    // Command factories should be called during code setup, not when trying to run the command.
     intakeButton.onTrue(intake.intake()).onTrue(conveyor.storePiece());
+    // Using the Trigger outside the subsystem.
+    conveyor.pieceDetected.whileTrue(/*driver feedback*/);
 }
 
 ```

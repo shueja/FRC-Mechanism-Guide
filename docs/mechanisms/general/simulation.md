@@ -54,12 +54,57 @@ The subsystem should have a sim object within it, which is constructed using phy
 
  These sim objects can also model hard range limits and account for gear ratios. WPILib provides several sim objects for common use cases. They differ in the units used for configuration and output:
 
-|Class|State|Units|Notes|
-|-----|-----|-----|---|
-|DCMotorSim|Position, Velocity|Motor Rotations|No range limits|
-|ElevatorSim|Position, Velocity|Meters|Range limits, gravity compensation (assumes vertical elevator)|
+|Class|State|Units|Notes|Usage
+|-----|-----|-----|---|---|
+|DCMotorSim|Position, Velocity|Motor Rotations|No range limits|Rollers, Flywheels
+|ElevatorSim|Position, Velocity|Meters|Range limits, gravity modeling (assumes vertical elevator)|Elevators, range-limited linear motion
+|SingleJointedArmSim|Position, Velocity|Radians|Range limits, gravity modeling (assumes 0 is arm horizontal)|Arms, wrists, pivoting intakes, range-limited angular motion
 
 
-### Unit Conversions
+### DCMotorSim Code Example
+
+This example shows how simulation can be plumbed and how the same constants can be used in motor controller feedforward and in simulation setup. This example can be used for rollers or flywheels.
+
+`ElevatorSim` and `SingleJointedArmSim` have different constructors and interfaces. See the simulation examples in [Elevators](../elevators/#simulation) and [Pivots](../pivots/#simulation).
+
+The motor is assumed to have its SensorToMechanismRatio (and RotorToSensorRatio for external feedback) set so that gains and feedback are in mechanism rotations. 
+```java
+// TalonFX configs, probably not stored in the subsystem directly
+// motor rotations per mechanism rotation, >1 for reductions
+private final double GEARING =
+    config.Feedback.SensorToMechanismRatio * config.Feedback.RotorToSensorRatio;
+private final Slot0Configs gains = ...
+
+// Gains need to be converted from mechanism rotations to motor radians
+// V*s/(mechanism rotations) / (gearing * 2pi) = V*s^2/(motor radians)
+private final DCMotorSim motorSim =
+    new DCMotorSim(
+        LinearSystemId.createDCMotorSystem(
+            gains.kV / (GEARING * 2 * Math.PI),
+            gains.kA / (GEARING * 2 * Math.PI)),
+        DCMotor.getKrakenX60(1));
+
+public void simulationPeriodic() {
+// Get the SimState object
+var simState = motor.getSimState();
+// Modeling voltage dips is generally overkill for testing integration
+simState.setSupplyVoltage(12);
+// simState.getMotorVoltage is counterclockwise negative
+double volts = simState.getMotorVoltage();
+// Subtract out the kS term, since DCMotorSim doesn't include it in the model.
+if (Math.abs(voltage) <= gains.kS) {
+    volts = 0;
+} else {
+    volts -= Math.copySign(gains.kS, volts);
+}
+motorSim.setInput(volts);
+// Calculate one loop time into the future.
+motorSim.update(0.02);
+var rotorPos = motorSim.getAngularPositionRotations();
+var rotorVel = motorSim.getAngularVelocityRPM() / 60.0;
+
+simState.setRawRotorPosition(rotorPos);
+simState.setRotorVelocity(rotorVel);
+}
 
 
